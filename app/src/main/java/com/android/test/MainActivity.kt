@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), FSAFActivityCallbacks {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        GrantedListUtil.readList(applicationContext)
         sharedPreferences = getSharedPreferences("test", MODE_PRIVATE)
 
         fileManager = FileManager(applicationContext)
@@ -269,6 +269,7 @@ class MainActivity : AppCompatActivity(), FSAFActivityCallbacks {
         dialog.show()
     }
 
+
     private fun storeTreeUri(uri: Uri) {
         val dir = checkNotNull(fileManager.fromUri(uri)) { "fileManager.fromUri(${uri}) failure" }
 
@@ -278,6 +279,7 @@ class MainActivity : AppCompatActivity(), FSAFActivityCallbacks {
         fileManager.registerBaseDir<TestBaseDirectory>(testBaseDirectory)
         sharedPreferences.edit().putString(TREE_URI, uri.toString()).apply()
         Log.d(TAG, "storeTreeUri: $uri")
+        GrantedListUtil.save(uri,applicationContext)
     }
 
     private fun removeTreeUri() {

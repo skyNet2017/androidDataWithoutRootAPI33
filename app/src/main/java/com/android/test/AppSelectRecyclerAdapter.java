@@ -56,10 +56,15 @@ public class AppSelectRecyclerAdapter extends RecyclerView.Adapter<AppSelectRecy
                 onAppClickListener.onAppClicked(app);
             }
         });
+        String name = app.getName();
         holder.tvName.setText(app.getName());
         if (app.getExits()) {
-            holder.tvName.setText("📁" + app.getName());
+            name = "📁"+name;
+
         }
+        name = name + (GrantedListUtil.list.containsKey(pkg) ? " ✓" : " ❌");
+
+        holder.tvName.setText(name);
         holder.tvPkg.setText(pkg+","+position);
         holder.ivTag.setVisibility(app.getHasPermission() ? View.VISIBLE : View.GONE);
 
