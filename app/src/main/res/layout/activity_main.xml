@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <Button
+ <!--       <Button
             android:id="@+id/myApp"
             android:layout_marginTop="100dp"
             android:layout_width="wrap_content"
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:autoLink="all"
             android:text="https://www.coolapk.com/apk/com.folderv.file"
-            android:textAllCaps="false" />
+            android:textAllCaps="false" />-->
 
     </LinearLayout>
 </ScrollView>

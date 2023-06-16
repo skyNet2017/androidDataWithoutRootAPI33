@@ -2,8 +2,10 @@ package com.android.test
 
 import android.app.Dialog
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -80,6 +82,13 @@ class AppSelectDialogFragment : AppCompatDialogFragment() {
                 val apps = pm.queryIntentActivities(mainIntent, 0) //PackageManager.MATCH_ALL
                 for (app in apps) {
                     val appPkg: String = app.activityInfo.packageName
+                    if(appPkg.startsWith("com.miui.")
+                        || appPkg.startsWith("com.android.")
+                        || appPkg.startsWith("com.xiaomi.")
+                        || appPkg.startsWith("com.mi.")
+                    ){
+                        continue
+                    }
                     if (!pkgSet.contains(appPkg)) {
                         val item = AppItem()
                         item.pkg = appPkg
@@ -110,8 +119,23 @@ class AppSelectDialogFragment : AppCompatDialogFragment() {
                 pkgList.sortBy { it.name }
 
                 val applications = pm.getInstalledApplications(0)
+
+
+                var systemAppCount = 0
                 for (application in applications) {
+                    if(isSystemApp3(application)){
+                        systemAppCount++
+                        //系统app不列出
+                        continue
+                    }
                     val appPkg = application.packageName
+                    if(appPkg.startsWith("com.miui.")
+                        || appPkg.startsWith("com.android.")
+                        || appPkg.startsWith("com.xiaomi.")
+                        || appPkg.startsWith("com.mi.")
+                    ){
+                        continue
+                    }
                     if (!pkgSet.contains(appPkg)) {
                         val item = AppItem()
                         item.pkg = appPkg
@@ -139,6 +163,13 @@ class AppSelectDialogFragment : AppCompatDialogFragment() {
                         pkgSet.add(appPkg)
                     }
                 }
+                Log.i("app","app size: pkgList"+ pkgList.size)
+                Log.i("app","app size: "+ applications.size+", system app count: "+systemAppCount+", user app count:"+(applications.size-systemAppCount))
+               //https://developer.android.com/training/basics/intents/package-visibility?hl=zh-cn
+                //什么都不声明: 大多数系统应用 app size: 270, system app count: 265, user app count:5
+                //加上queries--action.MAIN:app size: 484, system app count: 273, user app count:211  --> 只查找那些桌面有icon可以打开的
+                //QUERY_ALL_PACKAGES :    app size: 541, system app count: 322, user app count:219
+
                 pkgList.sortWith(compareBy({ !it.hasPermission }, { !it.desk }, { it.name }))
 
                 activity?.runOnUiThread {
@@ -167,6 +198,27 @@ class AppSelectDialogFragment : AppCompatDialogFragment() {
                 .create()
         }
         return super.onCreateDialog(savedInstanceState)
+    }
+
+    fun isSystemApp2(packageInfo: ApplicationInfo): Boolean {
+        try {
+            if (File("/data/app/" + packageInfo.packageName + ".apk").exists()) {
+                return false
+            }
+            if (packageInfo.flags and 128 == 128) {
+                return true
+            }
+            if (packageInfo.flags and 1 == 1) {
+                return true
+            }
+        } catch (var2: java.lang.Exception) {
+            var2.printStackTrace()
+        }
+        return false
+    }
+
+    fun isSystemApp3(applicationInfo: ApplicationInfo): Boolean {
+        return applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
     }
 
     inner class AppItem {

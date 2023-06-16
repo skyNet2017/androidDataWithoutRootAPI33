@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity(), FSAFActivityCallbacks {
             runTests()
         }
 
-        findViewById<View>(R.id.myApp).setOnClickListener {
+       /* findViewById<View>(R.id.myApp).setOnClickListener {
             val pkg = "com.folderv.file"
             try {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$pkg")))
@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity(), FSAFActivityCallbacks {
 
         if(isZh(this)){
             findViewById<View>(R.id.tvCoolapk).visibility = View.VISIBLE
-        }
+        }*/
 
     }
 

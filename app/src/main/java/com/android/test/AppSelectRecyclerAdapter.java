@@ -60,7 +60,7 @@ public class AppSelectRecyclerAdapter extends RecyclerView.Adapter<AppSelectRecy
         if (app.getExits()) {
             holder.tvName.setText("📁" + app.getName());
         }
-        holder.tvPkg.setText(pkg);
+        holder.tvPkg.setText(pkg+","+position);
         holder.ivTag.setVisibility(app.getHasPermission() ? View.VISIBLE : View.GONE);
 
         try {
